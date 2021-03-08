@@ -39,11 +39,14 @@ io.on('connection', (socket) => {
 
   // Emit payload data to clients
   socket.on('payload', (payload) => {
-    // Check for payloads matching type RCON, send RCON command contained in payload
-    if (payload?.type === 'RCON') {
-      console.log(`${payload.data.command}`);
-      RCONClient.send(`${payload.data.command}`);
-    }
+    // socket.to('REACTLOCAL').emit('payload', payload);
+    socket.to('game').emit('payload', payload);
+  });
+
+  // Emit payload data to clients
+  socket.on('RCON', (payload) => {
+    console.log(`${payload.data.command}`);
+    RCONClient.send(`${payload.data.command}`);
   });
 
   socket.on('disconnect', () => {
