@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
 
   // Emit payload data to clients
   socket.on('RCON', (payload) => {
-    console.log(`${payload.data.command}`);
+    // console.log(`${payload.data.command}`);
     RCONClient.send(`${payload.data.command}`);
   });
 
@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('error', function (err) {
+  socket.on('error', (err) => {
     console.error(err.message);
   });
 });
@@ -75,21 +75,21 @@ const initWsClient = () => {
     console.log(`Connected to Rocket League on ${rlHost}`);
   };
 
-  wsClient.onmessage = function (message) {
+  wsClient.onmessage = (message) => {
     let data = JSON.parse(message.data);
     io.in('game').emit('update', data);
     // Log WS messages here
     // console.info(data.event);
   };
 
-  wsClient.onerror = function (err) {
+  wsClient.onerror = (err) => {
     console.error(
       'Error connecting to SOS, is the plugin running? Try plugin load SOS from BakkesMod console to be sure'
     );
     wsClient.close();
   };
 
-  wsClient.on('error', function (err) {
+  wsClient.on('error', (err) => {
     console.log(err.message);
     wsClient.close();
   });
@@ -99,7 +99,7 @@ initWsClient();
 let RCONClient;
 const initRCONClient = () => {
   RCONClient = new WebSocket(RCONHost);
-  RCONClient.onclose = function () {
+  RCONClient.onclose = () => {
     setTimeout(() => {
       console.error('Rocket League RCON connection Closed!');
       console.log('Attempting reconnection...');
@@ -113,16 +113,16 @@ const initRCONClient = () => {
     RCONClient.send('rcon_refresh_allowed');
   };
 
-  RCONClient.onmessage = function (message) {
+  RCONClient.onmessage = (message) => {
     console.log(message.data);
   };
 
-  RCONClient.onerror = function (err) {
+  RCONClient.onerror = (err) => {
     console.error('Error connecting to RCON!');
     RCONClient.close();
   };
 
-  RCONClient.on('error', function (err) {
+  RCONClient.on('error', (err) => {
     console.log(err.message);
     RCONClient.close;
   });
