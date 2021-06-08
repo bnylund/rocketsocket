@@ -46,7 +46,7 @@ example for RCON commands:
 
 ```js
 function rconSend(command) {
-  this.socket.emit('RCON', {
+  socket.emit('RCON', {
     data: {
       command: command,
     },
