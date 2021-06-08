@@ -1,20 +1,94 @@
+require('dotenv').config();
+const express = require('express');
+
 const app = require('express')();
-const http = require('http').Server(app);
+const chalk = require('chalk');
+const http = require('http').createServer(app);
+const ngrok = require('ngrok');
+const volleyball = require('volleyball');
 const WebSocket = require('ws');
+
+const port = 5000;
+
+// Init server
+const server = http.listen(port, () => {
+  console.log(
+    chalk.green(
+      `Server listening at ` +
+        chalk.whiteBright(`http://localhost:` + port + ' ✓ ') +
+        chalk.green(`NGROK tunnel `) +
+        chalk.whiteBright(`https://${process.env.NGROK_SUBD}.ngrok.io ✓`)
+    )
+  );
+  console.log(chalk.greenBright(`Ready...`));
+});
+
+// Socket IO client
+const io_client = require('socket.io-client');
+
+// Init socket.io, pass server for connection
+const io = require('socket.io')(server);
+
+const { setTimeout } = require('timers');
+
+// Timestamp console logs
+require('console-stamp')(console, { pattern: 'dd/mm/yyyy HH:MM:ss' });
+
+// Open NGROK tunnelling
+(async () => {
+  console.log(chalk.greenBright('NGROK tunneling requested.'));
+  await ngrok
+    .connect({
+      proto: 'http',
+      addr: 5000,
+      subdomain: process.env.NGROK_SUBD,
+      authtoken: process.env.NGROK_KEY,
+    })
+    .catch((error) => {
+      console.error(chalk.red(`NGROK Failed!`));
+      console.error(chalk.red(error));
+      console.error(error.details);
+      process.exit();
+    });
+})();
+
+// middleware for logging and parseing of data
+app.use(volleyball);
+app.use(express.json());
+
+// Allow CORS
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  next();
+});
+
+// Routing for serving up React app as overlay from build folder
+const path = require('path');
+app.use(express.static('build'));
+app.use(express.static('src'));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.get('/src/styles.scss', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src', 'styles.scss'));
+});
+
+// ROCKET LEAGUE STUFF:
 
 let gameStreams = {};
 let rlHost = 'http://localhost:49122';
 let RCONHost = 'http://localhost:9002';
-const port = 5000;
-
-const server = http.listen(port, () =>
-  console.log(`socket.io listening for Client on http://localhost:${port}/`)
-);
-
-const io = require('socket.io')(server);
 
 io.on('connection', (socket) => {
+  socket._id;
   socket.watching;
+
   socket.on('join', (id) => {
     socketId = id;
     if (!!socket._id) {
@@ -37,6 +111,12 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('disconnect', () => {
+    if (socket._id && socket.watching) {
+      endGameStream(socket._id);
+    }
+  });
+
   // Emit payload data to clients
   socket.on('payload', (payload) => {
     // socket.to('REACTLOCAL').emit('payload', payload);
@@ -45,25 +125,19 @@ io.on('connection', (socket) => {
 
   // Emit payload data to clients
   socket.on('RCON', (payload) => {
-    // console.log(`${payload.data.command}`);
+    console.log(`${payload.data.command}`);
     RCONClient.send(`${payload.data.command}`);
   });
 
-  socket.on('disconnect', () => {
-    if (socket._id && socket.watching) {
-      endGameStream(socket._id);
-    }
-  });
-
   socket.on('error', (err) => {
-    console.error(err.message);
+    console.error(chalk.red(err.message));
   });
 });
 
 let wsClient;
 const initWsClient = () => {
   wsClient = new WebSocket(rlHost);
-  wsClient.onclose = function () {
+  wsClient.onclose = () => {
     setTimeout(() => {
       console.error('Rocket League WebSocket Server Closed!');
       console.log('Attempting reconnection...');
@@ -72,25 +146,27 @@ const initWsClient = () => {
   };
 
   wsClient.onopen = function open() {
-    console.log(`Connected to Rocket League on ${rlHost}`);
+    console.log(
+      `Connected to ${chalk.yellow('Rocket League')} on ${chalk.blue(rlHost)}`
+    );
   };
 
   wsClient.onmessage = (message) => {
     let data = JSON.parse(message.data);
     io.in('game').emit('update', data);
-    // Log WS messages here
-    // console.info(data.event);
   };
 
   wsClient.onerror = (err) => {
     console.error(
-      'Error connecting to SOS, is the plugin running? Try plugin load SOS from BakkesMod console to be sure'
+      chalk.red(
+        'Error connecting to SOS, is the plugin running? Try plugin load SOS from BakkesMod console to be sure'
+      )
     );
     wsClient.close();
   };
 
   wsClient.on('error', (err) => {
-    console.log(err.message);
+    console.error(chalk.red(err.message));
     wsClient.close();
   });
 };
@@ -108,7 +184,9 @@ const initRCONClient = () => {
   };
 
   RCONClient.onopen = function open() {
-    console.log(`Connected to RCON on ${RCONHost}`);
+    console.log(
+      `Connected to ${chalk.yellow('RCON')} on ${chalk.blue(RCONHost)}`
+    );
     RCONClient.send('rcon_password ' + 'password');
     RCONClient.send('rcon_refresh_allowed');
   };
@@ -118,12 +196,12 @@ const initRCONClient = () => {
   };
 
   RCONClient.onerror = (err) => {
-    console.error('Error connecting to RCON!');
+    console.error(chalk.red('Error connecting to RCON!'));
     RCONClient.close();
   };
 
   RCONClient.on('error', (err) => {
-    console.log(err.message);
+    console.error(chalk.red(err.message));
     RCONClient.close;
   });
 };
@@ -150,3 +228,75 @@ endGameStream = (id) => {
     }
   }
 };
+
+// Declare this socket outside of function body to allow other functions to emit messages
+const rlsocket = io_client('ws://localhost:5000');
+
+// teams array, store colours, team names, score, etc.
+let teams = [{}, {}];
+teams[0].color = [0, 0, 255, 255];
+teams[0].name = null;
+teams[0].score = 0;
+teams[1].color = [255, 35, 0, 255];
+teams[1].name = null;
+teams[1].score = 0;
+
+// player data
+let players = null;
+
+// Connect back to the SOS relay on this server to receive Rocket League game data, etc.
+const rocketLeague = () => {
+  rlsocket.emit('join', 'NODE-BACKEND');
+  rlsocket.emit('watchGame');
+
+  // Logic for each game tick update event
+  rlsocket.on('update', (data) => {
+    let event = data.event;
+    let stats = data.data;
+
+    /* Logic for 'game:update_state' events, this will contain all the game data, such as time, team numbers/names, player data,
+    score, statistics, etc etc. */
+    if (event == 'game:update_state') {
+      players = stats['players'];
+      teams[0].color = stats.game.teams[0]?.color_primary;
+      teams[0].name = stats.game.teams[0].name;
+      teams[0].score = stats.game.teams[0].score;
+      teams[1].color = stats.game.teams[0]?.color_primary;
+      teams[1].name = stats.game.teams[1].name;
+      teams[1].score = stats.game.teams[1].score;
+    }
+
+    // do things with goal scored events
+    if (event == 'game:goal_scored') {
+      console.log(stats);
+      // put code here
+    }
+
+    // do things with match ended/created event
+    if (
+      event == 'game:match_destroyed' ||
+      event == 'game:match_ended' ||
+      event == 'game:match_created'
+    ) {
+      // put code here
+    }
+
+    // do things with statfeed events
+    if (event == 'game:statfeed_event') {
+      console.log(stats);
+      // put code here
+    }
+  });
+};
+
+// Initialise websocket connection
+rocketLeague();
+
+// Kill server, make sure NGROK shuts down on SIGINT
+process.on('SIGINT', async function () {
+  await ngrok
+    .kill()
+    .then(console.log(chalk.yellow('NGROK shutting down')))
+    .then(console.log(chalk.yellow('Server shutting down')));
+  process.exit();
+});
