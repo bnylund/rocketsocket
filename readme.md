@@ -1,10 +1,17 @@
 # Rocket League socket.io server
 
 Connects to SOS / RCON sockets in BakkesMod plugin.  
-*node v14+ required, using optional chaining*
+_node v14+ required, using optional chaining_
 
 - Clone the repo, then run 'npm install'
 - Start server with 'npm start'
+
+Updated 08/06/21
+
+- Added Express routing and static serving from build folder
+- Added NGROK tunneling, spawn as child process, etc. Add required params in .env
+
+_if these new features are not required, use previous commit_
 
 To implement in your app, connect back to the server with a new socket.io client  
 e.g:
