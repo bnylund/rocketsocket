@@ -36,3 +36,32 @@ socket.on('update', (update) => {
   }
 }
 ```
+
+For RCON usage, under AppData\Roaming\bakkesmod\bakkesmod\bakkesmodsdk\bakkes_patchplugin.py  
+will show how bakkesmod uses the socket to install a new plugin.
+
+The commands in the example below, and any other commands you wish to be used must be added to the allowed commands file under AppData\Roaming\bakkesmod\bakkesmod\data\rcon_commands.cfg
+
+example for RCON commands:
+
+```js
+function rconSend(command) {
+  this.socket.emit('RCON', {
+    data: {
+      command: command,
+    },
+  });
+}
+
+//
+
+if (update.event === 'game:post_countdown_begin') {
+  rconSend('rcon_refresh_allowed');
+  rconSend('replay_gui hud 1');
+  rconSend('replay_gui matchinfo 1');
+  setTimeout(() => {
+    rconSend('replay_gui hud 0');
+    rconSend('replay_gui matchinfo 0');
+  }, 500);
+}
+```
