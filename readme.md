@@ -39,15 +39,14 @@ socket.on('update', (update) => {
 
 To connect your frontend via NGROK instead of localhost, change the following code from above:
 
-````js
+```js
 // instantiate socketIOClient connection to localhost
 socket = socketIOClient('localhost:5000');
 
 // change to:
 // instantiate socketIOClient connection to NGROK
-socket = socketIOClient('http://yourngrokurl.here.thx.lol')
+socket = socketIOClient('http://yourngrokurl.here.thx.lol');
 ```
-
 
 For RCON usage, under AppData\Roaming\bakkesmod\bakkesmod\bakkesmodsdk\bakkes_patchplugin.py
 will show how bakkesmod uses the socket to install a new plugin.
@@ -76,4 +75,4 @@ if (update.event === 'game:post_countdown_begin') {
     rconSend('replay_gui matchinfo 0');
   }, 500);
 }
-````
+```
