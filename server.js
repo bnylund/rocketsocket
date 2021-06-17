@@ -1,10 +1,7 @@
-require('dotenv').config();
 const express = require('express');
-
 const app = require('express')();
 const chalk = require('chalk');
 const http = require('http').createServer(app);
-const ngrok = require('ngrok');
 const volleyball = require('volleyball');
 const WebSocket = require('ws');
 
@@ -15,9 +12,7 @@ const server = http.listen(port, () => {
   console.log(
     chalk.green(
       `Server listening at ` +
-        chalk.whiteBright(`http://localhost:` + port + ' ✓ ') +
-        chalk.green(`NGROK tunnel `) +
-        chalk.whiteBright(`https://${process.env.NGROK_SUBD}.ngrok.io ✓`)
+        chalk.whiteBright(`http://localhost:` + port + ' ✓ ')
     )
   );
   console.log(chalk.greenBright(`Ready...`));
@@ -34,24 +29,6 @@ const { setTimeout } = require('timers');
 // Timestamp console logs
 require('console-stamp')(console, { pattern: 'dd/mm/yyyy HH:MM:ss' });
 
-// Open NGROK tunnelling
-(async () => {
-  console.log(chalk.greenBright('NGROK tunneling requested.'));
-  await ngrok
-    .connect({
-      proto: 'http',
-      addr: 5000,
-      subdomain: process.env.NGROK_SUBD,
-      authtoken: process.env.NGROK_KEY,
-    })
-    .catch((error) => {
-      console.error(chalk.red(`NGROK Failed!`));
-      console.error(chalk.red(error));
-      console.error(error.details);
-      process.exit();
-    });
-})();
-
 // middleware for logging and parseing of data
 app.use(volleyball);
 app.use(express.json());
@@ -64,19 +41,6 @@ app.use(function (req, res, next) {
     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
   next();
-});
-
-// Routing for serving up React app as overlay from build folder
-const path = require('path');
-app.use(express.static('build'));
-app.use(express.static('src'));
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-app.get('/src/styles.scss', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src', 'styles.scss'));
 });
 
 // ROCKET LEAGUE STUFF:
@@ -294,9 +258,6 @@ rocketLeague();
 
 // Kill server, make sure NGROK shuts down on SIGINT
 process.on('SIGINT', async function () {
-  await ngrok
-    .kill()
-    .then(console.log(chalk.yellow('NGROK shutting down')))
-    .then(console.log(chalk.yellow('Server shutting down')));
+  console.log(chalk.yellow('Server shutting down'));
   process.exit();
 });
