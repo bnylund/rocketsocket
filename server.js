@@ -65,13 +65,13 @@ io.on('connection', (socket) => {
       endGameStream(socket._id);
       console.log(`Client ${id} left`);
     }
-    socket.join('game');
     socket._id = id;
     console.log(`Client ${id} connected, ID: ${socket.id}`);
   });
 
   socket.on('watchGame', () => {
     if (!socket.watching) {
+      socket.join('game');
       createGameStream(socket._id);
       socket.watching = true;
       console.log(
@@ -82,6 +82,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     if (socket._id && socket.watching) {
+      socket.leave('game');
       endGameStream(socket._id);
     }
   });
@@ -102,6 +103,28 @@ io.on('connection', (socket) => {
     console.error(chalk.red(err.message));
   });
 });
+
+createGameStream = (id) => {
+  if (gameStreams[id]) {
+    gameStreams[id].connected++;
+    return gameStreams[id];
+  }
+  gameStreams[id] = {
+    ws: wsClient,
+    connected: 1,
+  };
+};
+
+endGameStream = (id) => {
+  if (gameStreams[id]) {
+    gameStreams[id].connected--;
+    if (gameStreams[id].connected < 1) {
+      console.log(`Client ${id} disconnected`);
+      gameStreams[id].ws.close();
+      delete gameStreams[id];
+    }
+  }
+};
 
 let wsClient;
 const initWsClient = () => {
@@ -175,28 +198,6 @@ const initRCONClient = () => {
   });
 };
 initRCONClient();
-
-createGameStream = (id) => {
-  if (gameStreams[id]) {
-    gameStreams[id].connected++;
-    return gameStreams[id];
-  }
-  gameStreams[id] = {
-    ws: wsClient,
-    connected: 1,
-  };
-};
-
-endGameStream = (id) => {
-  if (gameStreams[id]) {
-    gameStreams[id].connected--;
-    if (gameStreams[id].connected < 1) {
-      console.log(`Client ${id} disconnected`);
-      gameStreams[id].ws.close();
-      delete gameStreams[id];
-    }
-  }
-};
 
 // Declare this socket outside of function body to allow other functions to emit messages
 const rlsocket = io_client('ws://localhost:5000');
