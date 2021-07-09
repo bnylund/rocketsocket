@@ -22,7 +22,13 @@ const server = http.listen(port, () => {
 const io_client = require('socket.io-client');
 
 // Init socket.io, pass server for connection
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+  cors: {
+    origin: ['http://localhost:3000', 'https://admin.socket.io'],
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
 
 const { setTimeout } = require('timers');
 
@@ -70,7 +76,7 @@ io.on('connection', (socket) => {
       createGameStream(socket._id);
       socket.watching = true;
       console.log(
-        `Client ${socket._id} in rooms: ${JSON.stringify(socket.rooms)}`
+        `Client ${socket._id} in rooms: ${Array.from(socket.rooms).join(', ')}`
       );
     }
   });
