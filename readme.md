@@ -15,7 +15,9 @@ e.g:
 import socketIOClient from 'socket.io-client';
 
 // instantiate socketIOClient connection to localhost
-socket = socketIOClient('localhost:5000');
+socket = socketIOClient('localhost:5000', {
+  withCredentials: true,
+});
 // emit join message to socket with client ID
 socket.emit('join', 'FRONTEND');
 /* emit watchGame message to socket, required for backend server to
@@ -42,7 +44,9 @@ socket = socketIOClient('localhost:5000', {
 
 // change to:
 // instantiate socketIOClient connection to NGROK
-socket = socketIOClient('http://yourngrokurl.here.thx.lol');
+socket = socketIOClient('http://yourngrokurl.here.thx.lol', {
+  withCredentials: true,
+});
 ```
 
 For RCON usage, under AppData\Roaming\bakkesmod\bakkesmod\bakkesmodsdk\bakkes_patchplugin.py
