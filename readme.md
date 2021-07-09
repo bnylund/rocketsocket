@@ -65,7 +65,9 @@ function rconSend(command) {
   });
 }
 
-//
+/* this example will send every time, personally, I update a state value on first fire
+and have code to check if that value is true or not, which I clear at the end of the match
+so that it only fires on the first time this event occurs */
 
 if (update.event === 'game:post_countdown_begin') {
   rconSend('rcon_refresh_allowed');
