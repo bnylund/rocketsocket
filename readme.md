@@ -36,7 +36,9 @@ To connect your frontend via NGROK instead of localhost, change the following co
 
 ```js
 // instantiate socketIOClient connection to localhost
-socket = socketIOClient('localhost:5000');
+socket = socketIOClient('localhost:5000', {
+  withCredentials: true,
+});
 
 // change to:
 // instantiate socketIOClient connection to NGROK
