@@ -95,8 +95,8 @@ io.on('connection', (socket) => {
   // Emit payload data to clients
   socket.on('payload', (payload) => {
     // console.log(payload);
-    // io.to('REACTLOCAL').emit('payload', payload);
-    io.to('game').emit('payload', payload);
+    // socket.to('REACTLOCAL').emit('payload', payload);
+    socket.to('game').emit('payload', payload);
   });
 
   // Emit payload data to clients
