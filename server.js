@@ -32,6 +32,8 @@ const io = require('socket.io')(server, {
   },
 });
 
+const { instrument } = require('@socket.io/admin-ui');
+
 const { setTimeout } = require('timers');
 
 // Timestamp console logs
@@ -264,6 +266,9 @@ const rocketLeague = () => {
 
 // Initialise websocket connection
 rocketLeague();
+
+// Socket IO admin board
+instrument(io, { auth: false });
 
 // Kill server, make sure NGROK shuts down on SIGINT
 process.on('SIGINT', async function () {
