@@ -24,9 +24,9 @@ const io_client = require('socket.io-client');
 const io = require('socket.io')(server, {
   cors: {
     // allow all, including from basic html page not hosted from node/express, etc.
-    origin: ['*', 'null'],
+    // origin: ['*', 'null'],
     // origin example for a locally hosted React app, and socket.io admin dashboard
-    // origin: ['http://localhost:3000', 'https://admin.socket.io'],
+    origin: ['http://localhost:3000', 'https://admin.socket.io'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -94,8 +94,9 @@ io.on('connection', (socket) => {
 
   // Emit payload data to clients
   socket.on('payload', (payload) => {
-    // socket.to('REACTLOCAL').emit('payload', payload);
-    socket.to('game').emit('payload', payload);
+    // console.log(payload);
+    // io.to('REACTLOCAL').emit('payload', payload);
+    io.to('game').emit('payload', payload);
   });
 
   // Emit payload data to clients
