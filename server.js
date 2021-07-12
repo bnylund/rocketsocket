@@ -5,7 +5,7 @@ const http = require('http').createServer(app);
 const volleyball = require('volleyball');
 const WebSocket = require('ws');
 
-const prompt = 6969;
+const port = 6969;
 
 // Init server
 const server = http.listen(port, () => {
