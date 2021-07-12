@@ -53,6 +53,19 @@ app.use(function (req, res, next) {
   next();
 });
 
+// Routing for serving up overlay from build folder
+const path = require('path');
+app.use(express.static('build'));
+app.use(express.static('src'));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.get('/src/styles.scss', (req, res) => {
+  res.sendFile(path.join(__dirname, 'src', 'styles.scss'));
+});
+
 // ROCKET LEAGUE STUFF:
 
 let gameStreams = {};
