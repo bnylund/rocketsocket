@@ -1,14 +1,13 @@
 const express = require('express');
 const app = require('express')();
 const chalk = require('chalk');
-const http = require('http').createServer(app);
 const volleyball = require('volleyball');
 const WebSocket = require('ws');
 
 const port = 6969;
 
 // Init server
-const server = http.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(
     chalk.green(
       `Server listening at ${chalk.whiteBright(`http://localhost:${port} ✓`)}`
@@ -26,7 +25,12 @@ const io = require('socket.io')(server, {
     // allow all, including from basic html page not hosted from node/express, etc.
     // origin: ['*', 'null'],
     // origin example for a locally hosted React app, and socket.io admin dashboard
-    origin: ['http://localhost:3000', 'https://admin.socket.io'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5000',
+      'https://admin.socket.io',
+      'null',
+    ],
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -220,7 +224,7 @@ const initRCONClient = () => {
 initRCONClient();
 
 // Declare this socket outside of function body to allow other functions to emit messages
-const rlsocket = io_client('ws://localhost:5000');
+const rlsocket = io_client(`ws://localhost:${port}`);
 
 // teams array, store colours, team names, score, etc.
 let teams = [{}, {}];
