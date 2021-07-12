@@ -5,7 +5,7 @@ const http = require('http').createServer(app);
 const volleyball = require('volleyball');
 const WebSocket = require('ws');
 
-const port = 5000;
+const prompt = 6969;
 
 // Init server
 const server = http.listen(port, () => {
@@ -96,6 +96,7 @@ io.on('connection', (socket) => {
   socket.on('payload', (payload) => {
     // console.log(payload);
     // socket.to('REACTLOCAL').emit('payload', payload);
+    // ! socket.to will NOT be received by the sender, change to io.to for single page apps if you want the sender to also receive the payload for state updates, etc. !
     socket.to('game').emit('payload', payload);
   });
 
