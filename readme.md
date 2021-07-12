@@ -18,11 +18,13 @@ import socketIOClient from 'socket.io-client';
 socket = socketIOClient('localhost:5000', {
   withCredentials: true,
 });
-// emit join message to socket with client ID
-socket.emit('join', 'FRONTEND');
-/* emit watchGame message to socket, required for backend server to
-create and destroy stream on per client ID basis */
-socket.emit('watchGame');
+socket.on('connect', () => {
+  // emit join message to socket with client ID
+  socket.emit('join', 'FRONTEND');
+  /* emit watchGame message to socket, required for backend server to
+  create and destroy stream on per client ID basis */
+  socket.emit('watchGame');
+})
 // on socket message 'update', run logic on that data
 socket.on('update', (update) => {
   // run socket logic here, e.g:
