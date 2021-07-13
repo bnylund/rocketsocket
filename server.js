@@ -28,6 +28,7 @@ const io = require('socket.io')(server, {
     origin: [
       'http://localhost:3000',
       'http://localhost:5000',
+      'http://localhost:6969',
       'https://admin.socket.io',
       'null',
     ],
