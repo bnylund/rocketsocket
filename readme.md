@@ -15,7 +15,7 @@ e.g:
 import socketIOClient from 'socket.io-client';
 
 // instantiate socketIOClient connection to localhost
-socket = socketIOClient('localhost:5000', {
+socket = socketIOClient('localhost:6969', {
   withCredentials: true,
 });
 socket.on('connect', () => {
