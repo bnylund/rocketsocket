@@ -22,10 +22,9 @@ const io_client = require('socket.io-client');
 // Init socket.io, pass server for connection
 const io = require('socket.io')(server, {
   cors: {
-    // allow all, including from basic html page not hosted from node/express, etc.
-    // origin: ['*', 'null'],
-    // origin example for a locally hosted React app, and socket.io admin dashboard
+    // origin examples, add your required host to the following array:
     origin: [
+      'http://127.0.0.1:5500',
       'http://localhost:3000',
       'http://localhost:5000',
       'http://localhost:6969',
