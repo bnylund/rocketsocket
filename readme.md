@@ -8,7 +8,43 @@ _node v14+ required, using optional chaining_
 
 ## NGROK / Express static server version available in NGROK branch
 
-To implement in your app, connect back to the server with a new socket.io client  
+To implement in a standard HTML page, source the socket.io client from CDN,  
+check at https://cdnjs.com/libraries/socket.io for current links, then import via script tag:
+
+```html
+<head>
+  <!-- other script tags, etc -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.min.js"></script>
+  <!-- other script tags, etc -->
+</head>
+
+<body>
+  <script>
+    const socket = io('http://localhost:6969', {
+      withCredentials: true,
+    });
+    socket.on('connect', () => {
+      // emit join message to socket with client ID
+      socket.emit('join', 'FRONTEND');
+      /* emit watchGame message to socket, required for backend server to
+      create and destroy stream on per client ID basis */
+      socket.emit('watchGame');
+    });
+    // on socket message 'update', run logic on that data
+    socket.on('update', (update) => {
+      // run socket logic here, e.g:
+      if (update.event === 'game:update_state') {
+        //do stuff with update
+        console.log(update.data);
+        //etc
+      }
+    });
+  </script>
+</body>
+```
+
+To implement in your app using a framework, e.g. React/Vue/Angular/Svelte etc,  
+connect back to the server with a new socket.io client  
 e.g:
 
 ```js
@@ -34,21 +70,6 @@ socket.on('update', (update) => {
     //etc
   }
 }
-```
-
-To connect your frontend via NGROK instead of localhost, change the following code from above:
-
-```js
-// instantiate socketIOClient connection to localhost
-socket = socketIOClient('localhost:5000', {
-  withCredentials: true,
-});
-
-// change to:
-// instantiate socketIOClient connection to NGROK
-socket = socketIOClient('http://yourngrokurl.here.thx.lol', {
-  withCredentials: true,
-});
 ```
 
 For RCON usage, under AppData\Roaming\bakkesmod\bakkesmod\bakkesmodsdk\bakkes_patchplugin.py
