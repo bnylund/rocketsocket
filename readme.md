@@ -5,8 +5,8 @@ _node v14+ required, using optional chaining_
 
 - Clone the repo, then run 'npm install'
 
-- Create a .env file, with an entry of CORS, comma delimited entries for passing allowed CORS addresses to socket.io
-  e.g:
+- Create a .env file, with an entry of CORS, comma delimited entries for passing allowed CORS addresses to socket.io  
+  e.g:  
   CORS = 'http://10.0.0.60:3000, http://localhost:3000'
 
 - Start server with 'npm start'
@@ -77,10 +77,11 @@ socket.on('update', (update) => {
 }
 ```
 
-For RCON usage, under AppData\Roaming\bakkesmod\bakkesmod\bakkesmodsdk\bakkes_patchplugin.py
-will show how bakkesmod uses the socket to install a new plugin.
+For RCON usage, firstly, check under AppData\Roaming\bakkesmod\bakkesmod\bakkesmodsdk\bakkes_patchplugin.py
+for an example showing how bakkesmod uses the socket to install a new plugin.
 
-The commands in the example below, and any other commands you wish to be used must be added to the allowed commands file under AppData\Roaming\bakkesmod\bakkesmod\data\rcon_commands.cfg
+Any commands you wish to use through RCON connection, must be added to the allowed commands file under:  
+AppData\Roaming\bakkesmod\bakkesmod\data\rcon_commands.cfg
 
 example for RCON commands:
 
