@@ -4,7 +4,7 @@ const chalk = require('chalk');
 const volleyball = require('volleyball');
 const WebSocket = require('ws');
 
-require('dotenv').config()
+require('dotenv').config();
 
 const port = 6969;
 // Init server
@@ -19,13 +19,13 @@ const server = app.listen(port, () => {
 
 // Socket IO client
 const io_client = require('socket.io-client');
+console.log(process.env.CORS.split(', '));
 
 // Init socket.io, pass server for connection
 // place hosts in dot env file for CORS origins
 const io = require('socket.io')(server, {
   cors: {
-    // origin examples, add your required host to the following array:
-    origin: [process.env.CORS],
+    origin: process.env.CORS.split(', '),
     methods: ['GET', 'POST'],
     credentials: true,
   },
