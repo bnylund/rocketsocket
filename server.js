@@ -68,8 +68,8 @@ app.get('/src/styles.scss', (req, res) => {
 // ROCKET LEAGUE STUFF:
 
 let gameStreams = {};
-let rlHost = 'http://localhost:49122';
-let RCONHost = 'http://localhost:9002';
+let rlHost = process.env.RLHOST;
+let RCONHost = process.env.RCONHOST;
 
 io.on('connection', (socket) => {
   socket._id;

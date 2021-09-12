@@ -5,9 +5,11 @@ _node v14+ required, using optional chaining_
 
 - Clone the repo, then run 'npm install'
 
-- Create a .env file, with an entry of CORS, comma delimited entries for passing allowed CORS addresses to socket.io  
+- Create a .env file, CORS origins are specified as comma delimited strings, enter your RLHOST and RCONHOST addresses
   e.g:  
   CORS = 'http://10.0.0.60:3000, http://localhost:3000'
+  RLHOST = 'http://localhost:49122'
+  RCONHOST = 'http://localhost:9002'
 
 - Start server with 'npm start'
 
