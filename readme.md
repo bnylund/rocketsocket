@@ -58,7 +58,7 @@ e.g:
 import socketIOClient from 'socket.io-client';
 
 // instantiate socketIOClient connection to localhost
-socket = socketIOClient('http://localhost:6969', {
+const socket = socketIOClient('http://localhost:6969', {
   withCredentials: true,
 });
 socket.on('connect', () => {
