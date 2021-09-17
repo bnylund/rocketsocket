@@ -104,9 +104,14 @@ if (update.event === 'game:post_countdown_begin') {
   rconSend('rcon_refresh_allowed');
   rconSend('replay_gui hud 1');
   rconSend('replay_gui matchinfo 1');
+  /* 
+  adjust this setTimeout to a higher value if command not received or glitchy. 
+  100ms works fine for me and results in not seeing the spectator hud/clock/etc at all
+  but may be dependent on network connection and require higher value, any lower = fail for me.
+  */
   setTimeout(() => {
     rconSend('replay_gui hud 0');
     rconSend('replay_gui matchinfo 0');
-  }, 500);
+  }, 100);
 }
 ```
