@@ -1,5 +1,7 @@
 # Rocket League socket.io server
 
+## NGROK / Express static server version available in NGROK branch
+
 Connects to SOS / RCON sockets in BakkesMod plugin.  
 _node v14+ required, using optional chaining_
 
@@ -12,8 +14,6 @@ _node v14+ required, using optional chaining_
   RCONHOST = 'http://localhost:9002'
 
 - Start server with 'npm start'
-
-## NGROK / Express static server version available in NGROK branch
 
 To implement in a standard HTML page, source the socket.io client from CDN,  
 check at https://cdnjs.com/libraries/socket.io for current links, then import via script tag:
