@@ -7,11 +7,14 @@ _node v14+ required, using optional chaining_
 
 - Clone the repo, then run 'npm install'
 
-- Create a .env file, CORS origins are specified as comma delimited strings, enter your RLHOST and RCONHOST addresses
+- Edit the .env file, CORS origins are specified as comma delimited strings, enter your RLHOST and RCONHOST addresses
   e.g:  
   CORS = 'http://10.0.0.60:3000, http://localhost:3000'
   RLHOST = 'http://localhost:49122'
   RCONHOST = 'http://localhost:9002'
+  RCONPASS = 'alskdjklasjdlkasjd'
+
+- Value required for RCONPASS can be found by opening BakkesMod, going to File -> Open BakkesMod Folder, then opening cfg folder, and searching config.cfg for "rcon_password"
 
 - Start server with 'npm start'
 

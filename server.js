@@ -198,7 +198,7 @@ const initRCONClient = () => {
     console.log(
       `Connected to ${chalk.yellow('RCON')} on ${chalk.blue(RCONHost)}`
     );
-    RCONClient.send('rcon_password ' + 'password');
+    RCONClient.send(`rcon_password ${process.env.RCONPASS}`);
     RCONClient.send('rcon_refresh_allowed');
   };
 
