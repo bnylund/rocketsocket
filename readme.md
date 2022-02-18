@@ -3,6 +3,9 @@
 ## NGROK / Express static server version available in NGROK branch
 
 Connects to SOS / RCON sockets in BakkesMod plugin.  
+
+18/02/22 - merged commit from @ArcticFire19, RCONPASS is now auto populated from bakkes config file.
+
 _node v14+ required, using optional chaining_
 
 - Clone the repo, then run 'npm install'
@@ -12,7 +15,6 @@ _node v14+ required, using optional chaining_
   CORS = 'http://10.0.0.60:3000, http://localhost:3000'
   RLHOST = 'http://localhost:49122'
   RCONHOST = 'http://localhost:9002'
-  RCONPASS = 'alskdjklasjdlkasjd'
 
 - Value required for RCONPASS can be found by opening BakkesMod, going to File -> Open BakkesMod Folder, then opening cfg folder, and searching config.cfg for "rcon_password"
 
