@@ -3,8 +3,21 @@ const app = require('express')();
 const chalk = require('chalk');
 const volleyball = require('volleyball');
 const WebSocket = require('ws');
+const fs = require('fs');
+const appdata = require('appdata-path')
 
 require('dotenv').config();
+
+fs.readFile(appdata.getAppDataPath('\\bakkesmod\\bakkesmod\\cfg\\config.cfg'), 'utf8',(err, data) => {
+  if(err){
+    console.log(chalk.redBright(err));
+  }
+  else{
+    let file = data.split('\n')
+    let index = file.findIndex((element) => element.startsWith("rcon_password"))
+    process.env.RCONPASS = file[index].split("\"")[1]
+  }
+});
 
 const port = 6969;
 // Init server
