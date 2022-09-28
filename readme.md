@@ -85,20 +85,17 @@ socket.on('update', (update) => {
 RCON usage is no longer necessary for hiding HUD elements as originally described below, using the included ButtonMash plugin, there are options under F2 -> Plugins -> ButtonMash to enable the auto-spectate and auto-hide HUD features.
 Spectator camera commands can now also be sent via RCON with this plugin, to change player view.
 
-Usage: Copy ButtonMash.dll to your BakkesMod plugins folder.
+Usage: copy ButtonMash.dll to your BakkesMod plugins folder, if not automatically enabled, enable the plugin from F2 -> Plugins menu.
 
-For RCON usage, firstly, check under AppData\Roaming\bakkesmod\bakkesmod\bakkesmodsdk\bakkes_patchplugin.py
-for an example showing how bakkesmod uses the socket to install a new plugin.
-
-Any commands you wish to use through RCON connection, must be added to the allowed commands file under:  
-AppData\Roaming\bakkesmod\bakkesmod\data\rcon_commands.cfg
+For RCON usage, any commands you wish to use through the RCON connection, must be added to the allowed commands file under:  
+`C:\Users\USERNAME\AppData\Roaming\bakkesmod\bakkesmod\data\rcon_commands.cfg`
 
 I'd recommend adding the following commands to the file:
 `rcon_refresh_allowed`
 `replay_gui`
 `ButtonMash`
 
-examples for RCON commands:
+## RCON usage
 
 Declare an rconSend function in your frontend app, e.g.:
 
