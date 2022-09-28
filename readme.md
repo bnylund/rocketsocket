@@ -1,10 +1,6 @@
 # Rocket League socket.io server
 
-## NGROK / Express static server version available in NGROK branch
-
-Connects to SOS / RCON sockets in BakkesMod plugin.  
-
-18/02/22 - merged commit from @ArcticFire19, RCONPASS is now auto populated from bakkes config file.
+Connects to SOS / RCON sockets in BakkesMod plugin.
 
 _node v14+ required, using optional chaining_
 
@@ -12,11 +8,11 @@ _node v14+ required, using optional chaining_
 
 - Edit the .env file, CORS origins are specified as comma delimited strings, enter your RLHOST and RCONHOST addresses
   e.g:  
-  CORS = 'http://10.0.0.60:3000, http://localhost:3000'
-  RLHOST = 'http://localhost:49122'
-  RCONHOST = 'http://localhost:9002'
+  CORS = 'http://localhost:3000, 'http://server.ip.here:3000'
+  RLHOST = 'http://localhost:49122, http://server.ip.here:49122'
+  RCONHOST = 'http://localhost:9002, http://server.ip.here:9002'
 
-- Value required for RCONPASS can be found by opening BakkesMod, going to File -> Open BakkesMod Folder, then opening cfg folder, and searching config.cfg for "rcon_password"
+- Value required for RCONPASS will attempt to be auto-populated from default installation dir. Otherwise, can be found by opening BakkesMod, going to File -> Open BakkesMod Folder -> open cfg folder, -> open config.cfg -> find "rcon_password" entry.
 
 - Start server with 'npm start'
 
@@ -84,13 +80,27 @@ socket.on('update', (update) => {
 }
 ```
 
+## Update - ButtonMash plugin included for auto-spectate/auto-hide HUD elements
+
+RCON usage is no longer necessary for hiding HUD elements as originally described below, using the included ButtonMash plugin, there are options under F2 -> Plugins -> ButtonMash to enable the auto-spectate and auto-hide HUD features.
+Spectator camera commands can now also be sent via RCON with this plugin, to change player view.
+
+Usage: Copy ButtonMash.dll to your BakkesMod plugins folder.
+
 For RCON usage, firstly, check under AppData\Roaming\bakkesmod\bakkesmod\bakkesmodsdk\bakkes_patchplugin.py
 for an example showing how bakkesmod uses the socket to install a new plugin.
 
 Any commands you wish to use through RCON connection, must be added to the allowed commands file under:  
 AppData\Roaming\bakkesmod\bakkesmod\data\rcon_commands.cfg
 
-example for RCON commands:
+I'd recommend adding the following commands to the file:
+`rcon_refresh_allowed`
+`replay_gui`
+`ButtonMash`
+
+examples for RCON commands:
+
+Declare an rconSend function in your frontend app, e.g.:
 
 ```js
 function rconSend(command) {
@@ -100,20 +110,21 @@ function rconSend(command) {
     },
   });
 }
+```
 
-/* this example will send every time, personally, I update a state value on first fire
-and have code to check if that value is true or not, which I clear at the end of the match
-so that it only fires on the first time this event occurs */
+example for a ButtonMash command:
 
+```js
+rconSend('ButtonMash 0');
+```
+
+Old RCON usage example for hiding HUD elements if you don't wish to use plugin:
+
+```js
 if (update.event === 'game:post_countdown_begin') {
   rconSend('rcon_refresh_allowed');
   rconSend('replay_gui hud 1');
   rconSend('replay_gui matchinfo 1');
-  /* 
-  adjust this setTimeout to a higher value if command not received or glitchy. 
-  100ms works fine for me and results in not seeing the spectator hud/clock/etc at all
-  but may be dependent on network connection and require higher value, any lower = fail for me.
-  */
   setTimeout(() => {
     rconSend('replay_gui hud 0');
     rconSend('replay_gui matchinfo 0');
