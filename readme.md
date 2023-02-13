@@ -87,7 +87,7 @@ Spectator camera commands can now also be sent via RCON with this plugin, to cha
 
 Usage: copy ButtonMash.dll to your BakkesMod plugins folder, if not automatically enabled, enable the plugin from F2 -> Plugins menu.
 
-Note: there is a bug where you will only see a quit game menu with auto-spectate enabled (non-admin) if launching a match using mouse/keyboard - use a controller to launch a match to avoid this issue. Otherwise disable this feature.
+**_Delay value will need to be adjusted from F2 menu, I use 0.3 for private matches online, and need to increase to 1.6 for LAN matches for HUD hiding function to work correctly._**
 
 For RCON usage, any commands you wish to use through the RCON connection, must be added to the allowed commands file under:  
 `C:\Users\USERNAME\AppData\Roaming\bakkesmod\bakkesmod\data\rcon_commands.cfg`
