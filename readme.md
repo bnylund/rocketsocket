@@ -1,5 +1,8 @@
 # Rocket League socket.io server
 
+## Forked from [https://gitlab.com/scallensc1/rocketsocket](https://gitlab.com/scallensc1/rocketsocket)
+
+
 Connects to SOS / RCON sockets in BakkesMod plugin.
 
 _node v14+ required, using optional chaining_
